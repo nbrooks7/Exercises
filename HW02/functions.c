@@ -5,7 +5,7 @@
 #include "functions.h"
 
 int main(){
-    printf("%d\n", modprod(56,74,111));
+    printf("%d\n", findGenerator(7));
     return 0;
 }
 //compute a*b mod p safely
@@ -34,9 +34,10 @@ unsigned int modprod(unsigned int a, unsigned int b, unsigned int p) {
 //compute a^b mod p safely
 unsigned int modExp(unsigned int a, unsigned int b, unsigned int p) {
     int z = a;
-    in aExpb = 1;
+    int aExpb = 1;
     int binary[32];
     int count = 0;
+    int num = b;
     while (num != 0){
         binary[count] = (num%2);
         num = num/2;
@@ -46,7 +47,7 @@ unsigned int modExp(unsigned int a, unsigned int b, unsigned int p) {
         if(binary[i]==1){
             aExpb = modprod(aExpb,z,p);
         }
-        z = modProb(z,z,p);
+        z = modprod(z,z,p);
     }
     return aExpb;
 
@@ -108,14 +109,14 @@ unsigned int isProbablyPrime(unsigned int N) {
   r = (log10((N-1)/d))/log10(2);
 
   for (unsigned int n=0;n<NsmallPrimes;n++) {
-    int x = modExp(a,d,N);
-    if (x == 1) || (x == N-1){
+    int x = modExp(n,d,N);
+    if ((x == 1) || (x == N-1)){
         continue;
     }
     for (int i = 1; i < r-1; r++){
         x = modprod(x,x,N);
         if (x == N-1){
-            return false;
+            return 0;
         }
         else if (x == N-1){
             continue;
@@ -130,4 +131,18 @@ unsigned int isProbablyPrime(unsigned int N) {
 //Finds a generator of Z_p using the assumption that p=2*q+1
 unsigned int findGenerator(unsigned int p) {
   /* Q3.3: complete this function and use the fact that p=2*q+1 to quickly find a generator */
+    int q = (p-1)/2;
+    for (int g = 2; g < q; g++){
+        int numb = 0;
+        for (int r = 1;r<q-1;r++){
+            if (modExp(g,r,q) != 1)
+            {
+                numb++;
+            }
+        }
+        if (numb == (q-2))
+        {
+          return g;
+        }
+    }
 }
