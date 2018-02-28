@@ -5,7 +5,7 @@
 #include "functions.h"
 
 int main(){
-    printf("%d\n", findGenerator(7));
+    printf("%d\n", isProbablyPrime(1009));
     return 0;
 }
 //compute a*b mod p safely
@@ -104,16 +104,16 @@ unsigned int isProbablyPrime(unsigned int N) {
   //if we're testing a large number switch to Miller-Rabin primality test
   /* Q2.1: Complete this part of the isProbablyPrime function using the Miller-Rabin pseudo-code */
   unsigned int r,d;
-
   d = 1;
   r = (log10((N-1)/d))/log10(2);
 
+  
   for (unsigned int n=0;n<NsmallPrimes;n++) {
     int x = modExp(n,d,N);
     if ((x == 1) || (x == N-1)){
         continue;
     }
-    for (int i = 1; i < r-1; r++){
+    for (int i = 1; i < r-1; i++){
         x = modprod(x,x,N);
         if (x == N-1){
             return 0;
@@ -132,17 +132,38 @@ unsigned int isProbablyPrime(unsigned int N) {
 unsigned int findGenerator(unsigned int p) {
   /* Q3.3: complete this function and use the fact that p=2*q+1 to quickly find a generator */
     int q = (p-1)/2;
-    for (int g = 2; g < q; g++){
+    for (int g = 2; g < p; g++){
         int numb = 0;
-        for (int r = 1;r<q-1;r++){
-            if (modExp(g,r,q) != 1)
+        for (int r = 1;r<p-1;r++){
+            if (modExp(g,r,p) != 1)
             {
                 numb++;
             }
         }
-        if (numb == (q-2))
+        if (numb == (p-2))
         {
           return g;
         }
     }
 }
+
+
+
+unsigned int bonus(unsigned int p)
+{
+    int x = rand() % (p) + 1;
+    int g = findGenerator(p);
+    int h = modExp(g,x,p);
+    return h;
+}
+
+unsigned int bonus2(unsigned int p, unsigned int h, unsigned int g){
+    int x = 1;
+    while(h != modExp(g,x,p))
+    {
+        x++;
+    }
+    return x;
+}
+
+

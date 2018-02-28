@@ -53,7 +53,14 @@ int main (int argc, char **argv) {
 	/* Q3.3: use the fact that p=2*q+1 to quickly find a generator */
 	unsigned int g = findGenerator(p);
 
-	printf("g = %u is a generator of Z_%u \n", g, p);  
+	printf("g = %u is a generator of Z_%u \n", g, p);
+
+    unsigned int h = bonus(p);
+    printf("h = %d \n", h);
+
+    unsigned int x = bonus2(p,h,g);
+    printf("x = %d satisfies h = g^x \n", x);
+
 
   return 0;
 }
