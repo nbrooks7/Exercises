@@ -31,20 +31,21 @@ int main (int argc, char **argv) {
   int p;
 
   /* Q2.2: Use isProbablyPrime and randomXbitInt to find a random n-bit prime number */
-
-  p = ranXbitInt(n);
-  while (isProbablyPrime(p) != 1){
-      p = ranXbitInt(n);
+  p = randXbitInt(n);
+  printf("we get to here");
+  while (isProbablyPrime(p) == 0){
+      p = randXbitInt(n);
   }
   printf("p = %u is probably prime.\n", p);
+
 
   /* Q3.2: Use isProbablyPrime and randomXbitInt to find a new random n-bit prime number 
      which satisfies p=2*q+1 where q is also prime */
   int q;
-  q = ranXbitInt(n);
+  q = randXbitInt(n);
   p = 2*q+1;
   while ((isProbablyPrime(q))&(isProbablyPrime(p)) != 1){
-      q = ranXbitInt(n);
+      q = randXbitInt(n);
       p = 2*q+1;
   }  
 
@@ -55,11 +56,7 @@ int main (int argc, char **argv) {
 
 	printf("g = %u is a generator of Z_%u \n", g, p);
 
-    unsigned int h = bonus(p);
-    printf("h = %d \n", h);
-
-    unsigned int x = bonus2(p,h,g);
-    printf("x = %d satisfies h = g^x \n", x);
+    bonus(p);
 
 
   return 0;

@@ -15,3 +15,7 @@ unsigned int isProbablyPrime(unsigned int N);
 
 //Finds a generator of Z_p using the assumption that p=2*q+1
 unsigned int findGenerator(unsigned int p);
+
+void bonus(unsigned int p);
+
+

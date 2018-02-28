@@ -3,11 +3,10 @@
 #include <math.h>
 
 #include "functions.h"
-
-int main(){
-    printf("%d\n", isProbablyPrime(4337));
-    return 20;
-}
+//int main(){
+  // printf("%d\n",isProbablyPrime(10000));
+  // return 0;
+//}
 //compute a*b mod p safely
 unsigned int modprod(unsigned int a, unsigned int b, unsigned int p) {
     int za = a;
@@ -125,7 +124,8 @@ unsigned int isProbablyPrime(unsigned int N) {
         else if (x == N-1){
             break;
         }
-    }  
+    }
+
   }
   return 1; //true
 }
@@ -134,7 +134,7 @@ unsigned int isProbablyPrime(unsigned int N) {
 unsigned int findGenerator(unsigned int p) {
   /* Q3.3: complete this function and use the fact that p=2*q+1 to quickly find a generator */
     int q = (p-1)/2;
-    for (int g = 2; g < p; g++){
+    for (int g = q; g < p; g++){
         int numb = 0;
         for (int r = 1;r<p-1;r++){
             if (modExp(g,r,p) != 1)
@@ -151,21 +151,33 @@ unsigned int findGenerator(unsigned int p) {
 
 
 
-unsigned int bonus(unsigned int p)
+void bonus(unsigned int p)
 {
-    int x = rand() % (p) + 1;
+    int x1 = (rand()+1) % (p);
     int g = findGenerator(p);
-    int h = modExp(g,x,p);
-    return h;
-}
-
-unsigned int bonus2(unsigned int p, unsigned int h, unsigned int g){
-    int x = 1;
-    while(h != modExp(g,x,p))
-    {
-        x++;
+    int h = modExp(g,x1,p);
+    int x2 = 1;
+    printf("x1 = %d\n", x1); //prints out x1
+    while(h != modExp(g,x2,p)){
+        x2++;
     }
-    return x;
+    printf("g = %d, h = %d, x2 = %d\n",g,h,x2); //prints out g,h,x2
 }
 
+//unsigned int bonus2(unsigned int p)
+//{
+   // int x = (rand()+1) % (p);
+   // int g = findGenerator(p);
+   // int h = modExp(g,x,p);
+   // return h;
 
+//}
+
+//unsigned int bonus3(unsigned int p, unsigned int h, unsigned int g){
+  //  int x = 1;
+  //  while(h != modExp(g,x,p))
+  //  {
+  //      x++;
+  //  }
+  //  return x;
+  //  }
