@@ -150,34 +150,17 @@ unsigned int findGenerator(unsigned int p) {
 }
 
 
-
 void bonus(unsigned int p)
 {
     int x1 = (rand()+1) % (p);
     int g = findGenerator(p);
     int h = modExp(g,x1,p);
     int x2 = 1;
-    printf("x1 = %d\n", x1); //prints out x1
+    printf("Bonus: x1 = %d\n", x1); //prints out x1
     while(h != modExp(g,x2,p)){
         x2++;
     }
-    printf("g = %d, h = %d, x2 = %d\n",g,h,x2); //prints out g,h,x2
+    printf("Bonus: g = %d, h = %d, x2 = %d\n",g,h,x2); //prints out g,h,x2
 }
 
-//unsigned int bonus2(unsigned int p)
-//{
-   // int x = (rand()+1) % (p);
-   // int g = findGenerator(p);
-   // int h = modExp(g,x,p);
-   // return h;
 
-//}
-
-//unsigned int bonus3(unsigned int p, unsigned int h, unsigned int g){
-  //  int x = 1;
-  //  while(h != modExp(g,x,p))
-  //  {
-  //      x++;
-  //  }
-  //  return x;
-  //  }
