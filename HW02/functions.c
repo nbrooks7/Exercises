@@ -5,8 +5,8 @@
 #include "functions.h"
 
 int main(){
-    printf("%d\n", isProbablyPrime(1009));
-    return 0;
+    printf("%d\n", isProbablyPrime(4337));
+    return 20;
 }
 //compute a*b mod p safely
 unsigned int modprod(unsigned int a, unsigned int b, unsigned int p) {
@@ -104,26 +104,28 @@ unsigned int isProbablyPrime(unsigned int N) {
   //if we're testing a large number switch to Miller-Rabin primality test
   /* Q2.1: Complete this part of the isProbablyPrime function using the Miller-Rabin pseudo-code */
   unsigned int r,d;
-  d = 1;
-  r = (log10((N-1)/d))/log10(2);
+  d = N-1;
+  r= 0;
+  while((d%2) != 1){
+      d = d/2;
+      r++;
+  }
 
   
   for (unsigned int n=0;n<NsmallPrimes;n++) {
-    int x = modExp(n,d,N);
+    int x = modExp(smallPrimeList[n],d,N);
     if ((x == 1) || (x == N-1)){
         continue;
     }
     for (int i = 1; i < r-1; i++){
         x = modprod(x,x,N);
-        if (x == N-1){
+        if (x == 1){
             return 0;
         }
         else if (x == N-1){
-            continue;
+            break;
         }
-    }
-    return 0; //false
-  
+    }  
   }
   return 1; //true
 }
