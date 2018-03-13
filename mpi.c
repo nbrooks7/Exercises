@@ -2,7 +2,7 @@
 #include<stdlib.h>
 #include <math.h>
 
-#include "mympi.h"
+#include "mpi.h"
 
 int main(int argc, char **argv){
 
@@ -20,8 +20,14 @@ int main(int argc, char **argv){
     double seed = rank;
     srand48(seed);
 
-    for (long long int n=0; n<1000000;n++){
-        //generate two random numbers
+    long long int Ntrials = 1000000;
+    
+   MPI _Barrier(MPI_COMM_WORLD);
+   double startTime = MPI_WTime();
+
+
+   for (long long int n=0; n<Ntrials;n++){
+    //generate two random numbers
         double rand1 = drand48();   //drand48 returns a number between 0 and 1
         double rand2 = drand48();
 
@@ -33,9 +39,17 @@ int main(int argc, char **argv){
         Ntotal++;
     }
 
-    double pi = 4.0*Ncircle/ (double) Ntotal;
+    long long int globalNcircle=0;
+    MPI_ALLreduce(&Ncircle, &globalNcircle,1 , MPI_LONG_LONG_INT,MPI_SUM,MPI_COMM_WORLD);
 
-    printf("Our estimate of pi is %f \n", pi);
+    double pi = 4.0*globalNcircle/ (double) (Ntotal*size);
+
+    MPI_Barrier(MPI_COMM_WORLD);
+    double endTime = MPI_WTime();
+
+    if (rank ==0){
+        printf("Our estimate of pi is %f, the running time was %g \n", pi, endTime-startTime);
+    }
 
     MPI_Finalize();
     return 0;
