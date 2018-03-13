@@ -11,7 +11,8 @@ int main(int argc, char **argv) {
   int Nthreads = atoi(argv[1]); 
   omp_set_num_threads(Nthreads);
 
-  
+  double startTime = omp_get_wtime();
+
   struct drand48_data *drandData; 
   drandData = (struct drand48_data*) malloc(Nthreads*sizeof(struct drand48_data));
 
@@ -22,7 +23,7 @@ int main(int argc, char **argv) {
   #pragma omp parallel
   {
       int rank = omp_get_thread_num();
-      int size = om=_get_num_threads();
+      int size = omp_get_num_threads();
       long int seed = rank;
       srand48_r(seed, drandData+0);
   }
@@ -40,6 +41,7 @@ int main(int argc, char **argv) {
     double rand1;
     double rand2;
 
+    int rank = omp_get_thread_num();
     //gererate two random numbers (use the thread id to offset drandData)
     drand48_r(drandData+rank, &rand1);
     drand48_r(drandData+rank, &rand2);
@@ -57,7 +59,11 @@ int main(int argc, char **argv) {
     }
   }
 
-  omp_get_wtime();
+  double endTime = omp_get_wtime();
+
+  double time = endTime - startTime;
+
+  printf("Runtime is %g \n ", time);
 
   double pi = 4.0*Ncircle/ (double) (Ntotal);
   printf("Our final estimate of pi is %g \n", pi);
