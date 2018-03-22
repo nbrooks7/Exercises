@@ -1,0 +1,32 @@
+gcc -O3 -I. -fopenmp -c mandelbrot.c
+mandelbrot.c: In function 'mandelbrot':
+mandelbrot.c:73:37: error: 'for' must be the first clause of '#pragma omp parallel'
+   #pragma omp parallel private(m,c) for
+                                     ^
+mandelbrot.c:73:37: error: 'for' is not valid for '#pragma omp parallel'
+make: *** [mandelbrot.o] Error 1
+libpng warning: Application built with libpng-1.6.20 but running with 1.5.13
+elapsed = 48.3992
+libpng warning: Application built with libpng-1.6.20 but running with 1.5.13
+elapsed = 48.3974
+libpng warning: Application built with libpng-1.6.20 but running with 1.5.13
+elapsed = 48.3967
+libpng warning: Application built with libpng-1.6.20 but running with 1.5.13
+elapsed = 48.397
+libpng warning: Application built with libpng-1.6.20 but running with 1.5.13
+elapsed = 48.3986
+libpng warning: Application built with libpng-1.6.20 but running with 1.5.13
+elapsed = 48.3983
+libpng warning: Application built with libpng-1.6.20 but running with 1.5.13
+elapsed = 48.3999
+libpng warning: Application built with libpng-1.6.20 but running with 1.5.13
+elapsed = 48.3985
+libpng warning: Application built with libpng-1.6.20 but running with 1.5.13
+elapsed = 48.5873
+libpng warning: Application built with libpng-1.6.20 but running with 1.5.13
+elapsed = 48.3972
+libpng warning: Application built with libpng-1.6.20 but running with 1.5.13
+elapsed = 48.397
+libpng warning: Application built with libpng-1.6.20 but running with 1.5.13
+elapsed = 48.3979
+=>> PBS: job killed: walltime 604 exceeded limit 600
