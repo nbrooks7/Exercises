@@ -30,6 +30,7 @@ int main (int argc, char **argv) {
   unsigned int n;
 
 
+  if (rank == 0){
   /* Q1.2 alter so only Alice performs the ElGamal setup */
   printf("Enter a number of bits: "); fflush(stdout);
   char status = scanf("%u",&n);
@@ -46,7 +47,6 @@ int main (int argc, char **argv) {
   unsigned int p, g, h, x;
 
   //setup an ElGamal cryptosystem
-  if (rank == 0){
      setupElGamal(n,&p,&g,&h,&x);
   }
 
@@ -96,7 +96,7 @@ int main (int argc, char **argv) {
        MPI_Status status[2];
  
        MPI_Send(Nmessages, 1, MPI_INT, 1, 1, MPI_COMM_WORLD,reqs+0);
-       MPI_Send(message, Nmessages, MPI_INT, destRank, 2, MPI_COMM_WORLD, reqs+1);
+       MPI_Send(*message, Nmessages, MPI_INT, destRank, 2, MPI_COMM_WORLD, reqs+1);
 
      }
      
