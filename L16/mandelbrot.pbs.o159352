@@ -1,0 +1,29 @@
+gcc -O3 -I. -fopenmp -c mandelbrot.c
+gcc -O3 -fopenmp -o mandelbrot mandelbrot.o png_util.o -lpng -lm
+libpng warning: Application built with libpng-1.6.20 but running with 1.5.13
+elapsed = 48.4032
+libpng warning: Application built with libpng-1.6.20 but running with 1.5.13
+elapsed = 48.4043
+libpng warning: Application built with libpng-1.6.20 but running with 1.5.13
+elapsed = 48.4023
+libpng warning: Application built with libpng-1.6.20 but running with 1.5.13
+elapsed = 48.3992
+libpng warning: Application built with libpng-1.6.20 but running with 1.5.13
+elapsed = 48.4019
+libpng warning: Application built with libpng-1.6.20 but running with 1.5.13
+elapsed = 48.4023
+libpng warning: Application built with libpng-1.6.20 but running with 1.5.13
+elapsed = 48.3971
+libpng warning: Application built with libpng-1.6.20 but running with 1.5.13
+elapsed = 48.4021
+libpng warning: Application built with libpng-1.6.20 but running with 1.5.13
+elapsed = 48.3983
+libpng warning: Application built with libpng-1.6.20 but running with 1.5.13
+elapsed = 48.3979
+libpng warning: Application built with libpng-1.6.20 but running with 1.5.13
+elapsed = 48.397
+libpng warning: Application built with libpng-1.6.20 but running with 1.5.13
+elapsed = 48.734
+libpng warning: Application built with libpng-1.6.20 but running with 1.5.13
+elapsed = 48.4004
+=>> PBS: job killed: walltime 642 exceeded limit 600

@@ -1,0 +1,11 @@
+gcc -O3 -I. -fopenmp -c mandelbrot.c
+mandelbrot.c: In function 'mandelbrot':
+mandelbrot.c:73:37: error: 'for' must be the first clause of '#pragma omp parallel'
+   #pragma omp parallel private(m,c) for
+                                     ^
+mandelbrot.c:73:37: error: 'for' is not valid for '#pragma omp parallel'
+make: *** [mandelbrot.o] Error 1
+libpng warning: Application built with libpng-1.6.20 but running with 1.5.13
+elapsed = 48.3991
+libpng warning: Application built with libpng-1.6.20 but running with 1.5.13
+elapsed = 48.3992
