@@ -39,7 +39,13 @@ int main (int argc, char **argv) {
   unsigned int p, g, h, x;
 
   //setup an ElGamal cryptosystem
-  setupElGamal(n,&p,&g,&h,&x);
+  if (rank == 0){
+     setupElGamal(n,&p,&g,&h,&x);
+
+     MPI_Bcast(&p, 1, MPI_INT,0,MPI_COMM_WORLD);
+     MPI_Bcast(&g,1,MPI_INT,0,MPI_COMM_WORLD);
+     MPI_Bcast(&h,1,MPI_INT,0,MPI_COMM_WORLD);
+  }
 
 
 
