@@ -153,7 +153,7 @@ void ElGamalEncrypt(unsigned int *m, unsigned int *a,
 
 void ElGamalDecrypt(unsigned int *m, unsigned int a, 
                     unsigned int p, unsigned int x) {
-    unsigned int s = modEcp(a,x,p);
+    unsigned int s = modExp(a,x,p);
     unsigned int sin = modExp(s,(p-2),p);
     *m = modprod(*m,sin,p);
 
