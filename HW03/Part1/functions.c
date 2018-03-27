@@ -123,6 +123,12 @@ void setupElGamal(unsigned int n, unsigned int *p, unsigned int *g,
                                   unsigned int *h, unsigned int *x) {
 
   /* Q1.1 Setup an ElGamal cryptographic system */
+ 
+  unsigned int randP = randXbitInt(32) % 997;
+  while(isProbablyPrime(randP)!=1){
+      randP++;
+  }
+  *p = randP;
   *g = findGenerator(*p);
   *x = randXbitInt(n) % *p;
   *h = modExp(*g,*x,*p);

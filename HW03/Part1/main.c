@@ -41,24 +41,26 @@ int main (int argc, char **argv) {
     return 0;   
   }
   printf("\n");
+  }
 
   
   //declare storage for an ElGamal cryptosytem
   unsigned int p, g, h, x;
 
   //setup an ElGamal cryptosystem
+  if (rank == 0){
      setupElGamal(n,&p,&g,&h,&x);
-  }
+  }  
 
 
   /* Q1.3 Share the public key information */
- if (rank == 0){
-    unsigned int *publicKey = (unsigned int *) malloc(3*sizeof(unsigned int));
-    publicKey[0] = p;
-    publicKey[1] = g;
-    publicKey[2] = h;
-    MPI_Bcast(publicKey, 3, MPI_INT, 0, MPI_COMM_WORLD);
- }
+ 
+
+    MPI_Bcast(&p, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Bcast(&g, 1, MPI_INT, 0, MPI_COMM_WORLD);
+    MPI_Bcast(&h, 1, MPI_INT, 0, MPI_COMM_WORLD);
+
+ 
 
   //make an array of messages to send/recv
   unsigned int Nmessages = 5;
@@ -92,11 +94,9 @@ int main (int argc, char **argv) {
   /* Q2.3 Have only Bob populate messages and then
     send all the encrypted mesages to Alice (rank 0) */
  
-       MPI_Request reqs[2];
-       MPI_Status status[2];
- 
-       MPI_Send(Nmessages, 1, MPI_INT, 1, 1, MPI_COMM_WORLD,reqs+0);
-       MPI_Send(*message, Nmessages, MPI_INT, destRank, 2, MPI_COMM_WORLD, reqs+1);
+       unsigned int tag = 1;
+       MPI_Send(message, Nmessages, MPI_INT, 0, tag,MPI_COMM_WORLD);
+       MPI_Send(a, Nmessages, MPI_INT, 0, tag, MPI_COMM_WORLD);
 
      }
      
@@ -105,10 +105,10 @@ int main (int argc, char **argv) {
     from Bob (rank 1) and then decrypt them */
   if (rank == 0){
 
-      MPI_Request reqs[2];
-      MPI_Status status[2];
-
-      MPI_Recv(*Nmessages, 1, MPI_INT< 0, 1, MPI_COMM_WORLD, reqs+0);
+      unsigned int tag =1;
+      MPI_Status stat;
+      MPI_Recv(message, Nmessages, MPI_INT,1,tag,MPI_COMM_WORLD,&stat);
+      MPI_Recv(a, Nmessages, MPI_INT,1, tag, MPI_COMM_WORLD,&stat);
 
   printf("Alice's recieved messages are:  [ ");
   for (unsigned int i=0;i<Nmessages;i++) {
