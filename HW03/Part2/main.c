@@ -66,6 +66,8 @@ int main (int argc, char **argv) {
   end = start + chunk;
   unsigned int count = 0;
 
+  unsigned int startTime = MPI_Wtime();
+
 
   //loop through the values from 'start' to 'end'
   while (end < N){
@@ -85,6 +87,12 @@ int main (int argc, char **argv) {
      end = start + chunk;
      
   }
+
+  unsigned int endTime = MPI_Wtime();
+  unsigned int runTime = endTime - startTime;
+  //unsigned int throughput = (N-start) / runTime;
+  printf("Run Time: %d \n", runTime);
+  //printf("Throughput: %d \n", throughput);
 
   MPI_Finalize();
 
