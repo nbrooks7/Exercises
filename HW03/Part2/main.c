@@ -66,7 +66,7 @@ int main (int argc, char **argv) {
   end = start + chunk;
   unsigned int count = 0;
 
-  unsigned int startTime = MPI_Wtime();
+  double startTime = MPI_Wtime();
 
 
   //loop through the values from 'start' to 'end'
@@ -79,6 +79,12 @@ int main (int argc, char **argv) {
              if (modExp(g,i+1,p)==h){
                  printf("Secret key found! x = %u \n", i+1);
                  end = N;                 
+                 double endTime = MPI_Wtime();
+                 double runTime = endTime - startTime;
+                 double throughput = (N-start) / runTime;
+                 printf("Run Time: %g \n", runTime);
+                 printf("Throughput: %g \n", throughput);
+                 break;
              }
         }
      }
@@ -88,11 +94,11 @@ int main (int argc, char **argv) {
      
   }
 
-  unsigned int endTime = MPI_Wtime();
-  unsigned int runTime = endTime - startTime;
-  //unsigned int throughput = (N-start) / runTime;
-  printf("Run Time: %d \n", runTime);
-  //printf("Throughput: %d \n", throughput);
+  //double endTime = MPI_Wtime();
+ // double runTime = endTime - startTime;
+ // double throughput = (N-start) / runTime;
+ // printf("Run Time: %g \n", runTime);
+ // printf("Throughput: %g \n", throughput);
 
   MPI_Finalize();
 
