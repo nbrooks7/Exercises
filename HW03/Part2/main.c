@@ -70,7 +70,7 @@ int main (int argc, char **argv) {
 
 
   //loop through the values from 'start' to 'end'
-  while (end < N){
+  while (end < N) {
      if (count < rem){
              end = end + 1;
      }
@@ -86,7 +86,7 @@ int main (int argc, char **argv) {
                  printf("Throughput: %g \n", throughput);
                  break;
              }
-        }
+         }        
      }
      count = count + 1;
      start = end + 1;
@@ -95,10 +95,10 @@ int main (int argc, char **argv) {
   }
 
   //double endTime = MPI_Wtime();
- // double runTime = endTime - startTime;
- // double throughput = (N-start) / runTime;
- // printf("Run Time: %g \n", runTime);
- // printf("Throughput: %g \n", throughput);
+  //double runTime = endTime - startTime;
+  //double throughput = (N-start) / runTime;
+  //printf("Run Time: %g \n", runTime);
+  //printf("Throughput: %g \n", throughput);
 
   MPI_Finalize();
 

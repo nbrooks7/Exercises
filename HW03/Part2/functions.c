@@ -122,7 +122,7 @@ unsigned int findGenerator(unsigned int p) {
 void setupElGamal(unsigned int n, unsigned int *p, unsigned int *g, 
                                   unsigned int *h, unsigned int *x) {
     unsigned int randP = randXbitInt(32) % 997;
-    while (isProbablyPrime(randP) != 1){
+    while ((isProbablyPrime(randP) != 1) && (isProbablyPrime(((randP-1)/2)) != 1)){
         randP++;
     }
     *p = randP;
