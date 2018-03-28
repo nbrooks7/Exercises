@@ -77,16 +77,14 @@ int main (int argc, char **argv) {
      if (rank == count){
          for (unsigned int i=start;i<end;i++) {
              if (modExp(g,i+1,p)==h){
-                 printf("Secret key found! x = %u \n", i+1);
-                 end = N;                 
+                 printf("Secret key found! x = %u \n", i+1);                
                  double endTime = MPI_Wtime();
                  double runTime = endTime - startTime;
                  double throughput = (N-start) / runTime;
                  printf("Run Time: %g \n", runTime);
                  printf("Throughput: %g \n", throughput);
-                 break;
              }
-         }        
+         }    
      }
      count = count + 1;
      start = end + 1;
@@ -94,11 +92,6 @@ int main (int argc, char **argv) {
      
   }
 
-  //double endTime = MPI_Wtime();
-  //double runTime = endTime - startTime;
-  //double throughput = (N-start) / runTime;
-  //printf("Run Time: %g \n", runTime);
-  //printf("Throughput: %g \n", throughput);
 
   MPI_Finalize();
 
