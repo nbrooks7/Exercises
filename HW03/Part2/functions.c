@@ -121,13 +121,21 @@ unsigned int findGenerator(unsigned int p) {
 
 void setupElGamal(unsigned int n, unsigned int *p, unsigned int *g, 
                                   unsigned int *h, unsigned int *x) {
-    unsigned int randP = randXbitInt(n);
-    while ((isProbablyPrime(randP) != 1) && (isProbablyPrime(((randP-1)/2)) != 1)){
-        randP = randP + 1;
+    *p = randXbitInt(n);
+    unsigned int q = (*p-1)/2;
+    while ((isProbablyPrime(*p)!=1) && (isProbablyPrime(q) != 1)){
+        *p = randXbitInt(n);
+        q = (*p-1)/2;
     }
-    *p = randP;
     *g = findGenerator(*p);
+    while (*g == 0){
+        *g = findGenerator(*p);
+    }
     *x = randXbitInt(n) % *p;
+    while (*x == 0){
+         *x = randXbitInt(n) % *p;
+    }
+
     *h = modExp(*g,*x,*p);
 
   /* Setup an ElGamal cryptographic system */
