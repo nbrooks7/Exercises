@@ -21,6 +21,7 @@ To create an image with 4096 x 4096 pixels (last argument will be used to set nu
 #include "png_util.h"
 
 // Q2a: add include for CUDA header file here:
+#include "cuda.h"
 
 #define MXITER 1000
 
@@ -62,23 +63,19 @@ int testpoint(complex_t c){
 // record the  iteration counts in the count array
 
 // Q2c: transform this function into a CUDA kernel
-void  mandelbrot(int Nre, int Nim, complex_t cmin, complex_t cmax, float *count){ 
+__global__ void  mandelbrot(int Nre, int Nim, complex_t cmin, complex_t cmax, float *count){ 
   int n,m;
 
   complex_t c;
 
   double dr = (cmax.r-cmin.r)/(Nre-1);
-  double di = (cmax.i-cmin.i)/(Nim-1);;
+  double di = (cmax.i-cmin.i)/(Nim-1);
 
-  for(n=0;n<Nim;++n){
-    for(m=0;m<Nre;++m){
-      c.r = cmin.r + dr*m;
-      c.i = cmin.i + di*n;
+  c.r = cmin.r + dr*m;
+  c.i = cmin.i + di*n;
       
-      count[m+n*Nre] = testpoint(c);
-      
-    }
-  }
+  count[m+n*Nre] = testpoint(c);
+ 
 
 }
 
@@ -93,9 +90,19 @@ int main(int argc, char **argv){
   int Nthreads = atoi(argv[3]);
 
   // Q2b: set the number of threads per block and the number of blocks here:
+  int Bx = Nthreads;
+  int By = Nthreads;
+  dim3 B(Bx,By,1);
+
+  int Gx = (Nre+Bx -1)/Bx;
+  int Gy = (Nim+By -1)/By;
+  dim3 G(Gx,Gy,1);
 
   // storage for the iteration counts
-  float *count = (float*) malloc(Nre*Nim*sizeof(float));
+  float *countD = (float*) cudaMalloc(&countD,Nre*Nim*sizeof(float));
+  float *countH = (float*) cudaMalloc(&countH,Nre*Nim*sizeof(float));
+  cudaMemcpy(countD,countH, N*sizeof(float),cudaMemcpyHostToDevice);
+
 
   // Parameters for a bounding box for "c" that generates an interesting image
   const float centRe = -.759856, centIm= .125547;
@@ -112,7 +119,7 @@ int main(int argc, char **argv){
   clock_t start = clock(); //start time in CPU cycles
 
   // compute mandelbrot set
-  mandelbrot(Nre, Nim, cmin, cmax, count); 
+  mandelbrot <<<G,B>>> (Nre, Nim, cmin, cmax, count); 
   
   clock_t end = clock(); //start time in CPU cycles
   
