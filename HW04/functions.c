@@ -214,7 +214,7 @@ void convertStringToZ(unsigned char *string, unsigned int Nchars,
 
   /* Q1.3 Complete this function   */
   unsigned int pos = 0;
-  #pragma omp parallel shared(string, Z)
+  #pragma omp parallel for shared(string, Z)
   for (unsigned int i = 0; i < Nchars; i+= (Nchars/Nints)){
         for(unsigned int j = 0; j < (Nchars/Nints); j++){
             string[pos] = string[pos] << (j*8);
@@ -234,7 +234,7 @@ void convertZToString(unsigned int  *Z,      unsigned int Nints,
   /* Q1.4 Complete this function   */
     unsigned int pos = 0;
     unsigned int move, let, move2;
-    #pragma omp parallel shared(string, Z)
+    #pragma omp parallel for shared(string, Z)
     for (unsigned int i = 0; i < Nchars; i+= (Nchars/Nints)){
         for (unsigned int j = 0; j < (Nchars/Nints); j++){
             move = 0xFF;
