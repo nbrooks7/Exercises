@@ -4,7 +4,7 @@
 #include <string.h>
 
 #include "functions.h"
-
+#include "omp.h"
 //compute a*b mod p safely
 unsigned int modprod(unsigned int a, unsigned int b, unsigned int p) {
   unsigned int za = a;
@@ -152,7 +152,7 @@ void ElGamalEncrypt(unsigned int *m, unsigned int *a, unsigned int Nints,
                     unsigned int p, unsigned int g, unsigned int h) {
 
   /* Q2.1 Parallelize this function with OpenMP   */
-
+  #pragma omp parallel for shared(a,m)
   for (unsigned int i=0; i<Nints;i++) {
     //pick y in Z_p randomly
     unsigned int y;
@@ -175,7 +175,7 @@ void ElGamalDecrypt(unsigned int *m, unsigned int *a, unsigned int Nints,
                     unsigned int p, unsigned int x) {
 
   /* Q2.1 Parallelize this function with OpenMP   */
-
+  #pragma omp parallel for shared(m,a)
   for (unsigned int i=0; i<Nints;i++) {
     //compute s = a^x
     unsigned int s = modExp(a[i],x,p);
@@ -193,18 +193,18 @@ void ElGamalDecrypt(unsigned int *m, unsigned int *a, unsigned int Nints,
 void padString(unsigned char* string, unsigned int charsPerInt) {
 
   /* Q1.2 Complete this function   */
-    unsigned int rem = strlen(string) % charsPerInt;
-    for (unsigned int i = 0; i < charsPerInt-rem; i++){
-        string = string.substring(0, strlen(string) - 1);
-        string.str_append(string, ' ');
-        string.str_append(string,'\0');
-
-    }
-    //while (strlen(string) % charsPerInt != 0){
+    //unsigned int rem = strlen(string) % charsPerInt;
+    //for (unsigned int i = 0; i < charsPerInt-rem; i++){
         //string = string.substring(0, strlen(string) - 1);
         //string.str_append(string, ' ');
         //string.str_append(string,'\0');
+
     //}
+    unsigned int len = strlen(string);
+    while (strlen(string) % charsPerInt != 0){
+        string[len] = ' ';
+        string[len+1] = '\0';
+    }
 
 }
 
@@ -214,8 +214,9 @@ void convertStringToZ(unsigned char *string, unsigned int Nchars,
 
   /* Q1.3 Complete this function   */
   unsigned int pos = 0;
-  for( i = 0; i < Nchars; i+= (Nchars/Nints)){
-        for(j = 0; j < (Nchars/Nints); j++){
+  #pragma omp parallel shared(string, Z)
+  for (unsigned int i = 0; i < Nchars; i+= (Nchars/Nints)){
+        for(unsigned int j = 0; j < (Nchars/Nints); j++){
             string[pos] = string[pos] << (j*8);
             Z[i] = Z[i] | (unsigned int) string[pos];
             pos++;
@@ -231,6 +232,20 @@ void convertZToString(unsigned int  *Z,      unsigned int Nints,
                       unsigned char *string, unsigned int Nchars) {
 
   /* Q1.4 Complete this function   */
+    unsigned int pos = 0;
+    unsigned int move, let, move2;
+    #pragma omp parallel shared(string, Z)
+    for (unsigned int i = 0; i < Nchars; i+= (Nchars/Nints)){
+        for (unsigned int j = 0; j < (Nchars/Nints); j++){
+            move = 0xFF;
+            move = move << (j*8);
+            let = Z[i] & move;
+            move2 = let >> (j*8);
+            string[pos] = (unsigned char) move2;
+            pos++;
+
+        }
+    }
   /* Q2.2 Parallelize this function with OpenMP   */
 
 }
