@@ -218,13 +218,13 @@ void convertStringToZ(unsigned char *string, unsigned int Nchars,
   unsigned int num = Nchars/Nints;
   unsigned int move1 = 0;
   unsigned int move2 = 0;
-  #pragma omp parallel for
+  #pragma omp parallel for shared(Z,string)
   for (unsigned int i = 0; i < Nints; i++){
         if (num = 1){
             Z[i] = (unsigned int) string[i];
         }
         else if ((num = 2)){
-            Z[i] = 256* (unsigned int) string[i+move1] + (unsigned int) string[i+move1];
+            Z[i] = 256* (unsigned int) string[i+3move1] + (unsigned int) string[i+move1];
             move1 +=2;
         }
         else if ((num = 3) && (i % 3 == 0)){
