@@ -36,17 +36,17 @@ int main (int argc, char **argv) {
   fclose(file);
   free(pc);
 
- // FILE* file2 = fopen("messages.txt", "r");
- // unsigned int s;
-  //fscanf(file2, "%d", &s);
+  FILE* file2 = fopen("messages.txt", "r");
+  unsigned int s;
+  fscanf(file2, "%d", &s);
 
-  //int *data = (int *) malloc(s*sizeof(unsigned int));
+  int *data = (int *) malloc(s*sizeof(unsigned int));
 
-  //for (int m = 0; m<s; m++){
-   // fscanf(file2, "%d ", data+m);
- // }
-  //fclose(file2);
-  //printf("data[%d] = %d\n" ,1,data[1]);
+  for (int m = 1; m<s; m++){
+     fscanf(file2, "(%d,%d)", data+m);
+  }
+  fclose(file2);
+  printf("data[%d] = %d\n" ,1,data[1]);
 
   // find the secret key
   if (x==0 || modExp(g,x,p)!=h) {
