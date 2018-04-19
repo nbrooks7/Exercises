@@ -21,6 +21,32 @@ int main (int argc, char **argv) {
 
   /* Q3 Complete this function. Read in the public key data from public_key.txt
     and the cyphertexts from messages.txt. */
+  FILE* file = fopen("public_key.txt","r");
+  unsigned int *pc = (int *) malloc(4*sizeof(unsigned int));
+
+  for (int m = 0;m<4;m++){
+      fscanf(file, "%d", pc+m);
+  }
+  
+  n = pc[0];
+  p = pc[1];
+  g = pc[2];
+  h = pc[3];
+
+  fclose(file);
+  free(pc);
+
+ // FILE* file2 = fopen("messages.txt", "r");
+ // unsigned int s;
+  //fscanf(file2, "%d", &s);
+
+  //int *data = (int *) malloc(s*sizeof(unsigned int));
+
+  //for (int m = 0; m<s; m++){
+   // fscanf(file2, "%d ", data+m);
+ // }
+  //fclose(file2);
+  //printf("data[%d] = %d\n" ,1,data[1]);
 
   // find the secret key
   if (x==0 || modExp(g,x,p)!=h) {

@@ -41,8 +41,7 @@ int main (int argc, char **argv) {
   fprintf(file, "%d \n",n); 
   fprintf(file, "%d \n",p); 
   fprintf(file, "%d \n",g); 
-  fprintf(file, "%d \n",h); 
-  fprintf(file, "%d \n",x); 
+  fprintf(file, "%d \n",h);   
   fclose(file);
   
   return 0;

@@ -29,20 +29,41 @@ int main (int argc, char **argv) {
     convert the string to elements of Z_p, encrypt them, and write the cyphertexts to 
     message.txt */
   FILE* file = fopen("public_key.txt","r");
-  int s;
-  fscanf(file, "%d", &n);
-  int *pc = (int *) malloc(s*sizeof(int));
+  unsigned int *pc = (int *) malloc(4*sizeof(unsigned int));
 
-  for (int m = 0;m<s;m++){
+  for (int m = 0;m<4;m++){
       fscanf(file, "%d", pc+m);
   }
+  
+  n = pc[0];
+  p = pc[1];
+  g = pc[2];
+  h = pc[3];
 
   fclose(file);
-
-  for (int m = 0; m<n;m++){
-      printf("pc[%d] = %d\n", m,pc[m]);
-  }
+  //printf("n=%d,p=%d,g=%d,h=%d\n",pc[0],pc[1],pc[2],pc[3]);
   free(pc);
+
+  unsigned int charsPerInt = (n-1)/8;
+  padString(message, charsPerInt);
   
+  unsigned int Nchars = strlen(message);
+  unsigned int Nints = strlen(message)/charsPerInt;
+
+  unsigned int *Zmessage = (unsigned int *) malloc(Nints*sizeof(unsigned int));
+
+  unsigned int *a = (unsigned int *) malloc(Nints*sizeof(unsigned int));
+
+  convertStringToZ(message, Nchars, Zmessage, Nints);
+
+  ElGamalEncrypt(Zmessage,a,Nints,p,g,h);
+
+  FILE* file2 = fopen("message.txt","w");
+  fprintf(file2, "%d \n", Nints);
+  for (unsigned int i =0; i<Nints;i++){
+      fprintf(file2, "%d %d\n", Zmessage[i], a[i]);
+  }
+  fclose(file2);
+    
   return 0;
 }
