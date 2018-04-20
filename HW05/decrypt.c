@@ -36,17 +36,29 @@ int main (int argc, char **argv) {
   fclose(file);
   free(pc);
 
-  FILE* file2 = fopen("messages.txt", "r");
+  FILE* file2 = fopen("message.txt", "r");
   unsigned int s;
   fscanf(file2, "%d", &s);
 
   int *data = (int *) malloc(s*sizeof(unsigned int));
 
-  for (int m = 1; m<s; m++){
-     fscanf(file2, "(%d,%d)", data+m);
+  for (int m = 0; m<(s*2); m++){
+     fscanf(file2, "%d", data+m);
   }
   fclose(file2);
-  printf("data[%d] = %d\n" ,1,data[1]);
+  
+  //int *message = (int *) malloc(s*sizeof(unsigned int));
+  //unsigned int count = 0;
+  //for (int m =0;m<(s*2);m+=2){
+     //unsigned int m = data[m];
+     //unsigned int a = data[m+1];
+     //message[count]= ElGamalDecrypt(m,a,1,p,x);
+     //count++;
+  //}
+  //for (int m =0;m<s;m++){
+      //printf("message[%d] = %d\n",m,message[m]);
+  //}
+    
 
   // find the secret key
   if (x==0 || modExp(g,x,p)!=h) {
