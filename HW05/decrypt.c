@@ -39,27 +39,15 @@ int main (int argc, char **argv) {
   FILE* file2 = fopen("message.txt", "r");
   fscanf(file2, "%d", &Nints);
 
-  int *m = (int *) malloc(Nints*sizeof(unsigned int));
-  int *a = (int *) malloc(Nints*sizeof(unsigned int));
+  unsigned int *Zmessage = (unsigned int *) malloc(Nints*sizeof(unsigned int));
+  unsigned int *a = (unsigned int *) malloc(Nints*sizeof(unsigned int));
 
   for (int n = 0; n<Nints; n++){
-     fscanf(file2, "%d %d", &m[n],&a[n] );
+     fscanf(file2, "%d %d", &Zmessage[n],&a[n] );
   }
   fclose(file2);
   
-  //int *message = (int *) malloc(s*sizeof(unsigned int));
-  //unsigned int count = 0;
-  //for (int m =0;m<(s*2);m+=2){
-     //unsigned int m = data[m];
-     //unsigned int a = data[m+1];
-     //message[count]= ElGamalDecrypt(m,a,1,p,x);
-     //count++;
-  //}
-  //for (int m =0;m<s;m++){
-      //printf("message[%d] = %d\n",m,message[m]);
-  //}
-    
-
+  
   // find the secret key
   if (x==0 || modExp(g,x,p)!=h) {
     printf("Finding the secret key...\n");
@@ -80,21 +68,22 @@ int main (int argc, char **argv) {
   }
 
   /* Q3 After finding the secret key, decrypt the message */
-  //int *message = (int *) malloc(s*sizeof(unsigned int));
-  //unsigned int count = 0;
-  //for (unsigned int n =0;n<(s*2);n+=2){
-     //unsigned int m = data[n];
-     //unsigned int a = data[n+1];
-     //message[count]= ElGamalDecrypt(m,a,11,p,x);
-     //count++;
+  int bufferSize = 1024;
+  unsigned char *message = (unsigned char *) malloc(bufferSize*sizeof(unsigned char));
+  unsigned int Nchars = ((n-1)/8)*Nints; 
+  ElGamalDecrypt(Zmessage,a,Nints,p,x);
+  convertZToString(Zmessage, Nints, message, Nchars);
+  printf("Decrypted Message = \"%s\"\n", message);
+  
+  //for (int n =0;n<Nints;n++){
+      //printf("message[%d] = %d\n",n,message[n]);
   //}
-  for (int n =0;n<Nints;n++){
-      printf("m[%d] = %d\n",n,m[n]);
-  }
-  for (int m =0;m<Nints;m++){
-      printf("a[%d] = %d\n",m,a[m]);
-  }
+  //for (int m =0;m<Nints;m++){
+      //printf("a[%d] = %d\n",m,a[m]);
+  //}
 
-
+  free(Zmessage);
+  free(a);
+  free(message);
   return 0;
 }
