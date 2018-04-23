@@ -14,28 +14,28 @@ int main (int argc, char **argv) {
 
   /* Q4 Make the search for the secret key parallel on the GPU using CUDA. */
    __device__ unsigned int modprodDev(unsigned int a, unsigned int b, unsigned int p) {
-     unsigned int za = a;
-     unsigned int ab = 0;
+        unsigned int za = a;
+        unsigned int ab = 0;
 
-     while (b > 0) {
-        if (b%2 == 1) ab = (ab +  za) % p;
-            za = (2 * za) % p;
-            b /= 2;
+        while (b > 0) {
+             if (b%2 == 1) ab = (ab +  za) % p;
+                za = (2 * za) % p;
+                b /= 2;
+        }
+        return ab;
     }
-    return ab;
-}
   
-  __device__ unsigned int modExpDev(unsigned int a, unsigned int b, unsigned int p) {
-     unsigned int z = a;
-     unsigned int aExpb = 1;
+   __device__ unsigned int modExpDev(unsigned int a, unsigned int b, unsigned int p) {
+         unsigned int z = a;
+         unsigned int aExpb = 1;
 
-     while (b > 0) {
-         if (b%2 == 1) aExpb = modprodDev(aExpb, z, p);
-            z = modprodDev(z, z, p);
-            b /= 2;
-     }
-     return aExpb;
-}
+        while (b > 0) {
+             if (b%2 == 1) aExpb = modprodDev(aExpb, z, p);
+                 z = modprodDev(z, z, p);
+                 b /= 2;
+        }
+        return aExpb;
+    }
 
   //declare storage for an ElGamal cryptosytem
   unsigned int n, p, g, h, x;
