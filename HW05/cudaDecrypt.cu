@@ -13,6 +13,29 @@ int main (int argc, char **argv) {
      your completed decrypt.c main function. */
 
   /* Q4 Make the search for the secret key parallel on the GPU using CUDA. */
+   __device__ unsigned int modprodDev(unsigned int a, unsigned int b, unsigned int p) {
+     unsigned int za = a;
+     unsigned int ab = 0;
+
+     while (b > 0) {
+        if (b%2 == 1) ab = (ab +  za) % p;
+            za = (2 * za) % p;
+            b /= 2;
+    }
+    return ab;
+}
+  
+  __device__ unsigned int modExpDev(unsigned int a, unsigned int b, unsigned int p) {
+     unsigned int z = a;
+     unsigned int aExpb = 1;
+
+     while (b > 0) {
+         if (b%2 == 1) aExpb = modprodDev(aExpb, z, p);
+            z = modprodDev(z, z, p);
+            b /= 2;
+     }
+     return aExpb;
+}
 
   //declare storage for an ElGamal cryptosytem
   unsigned int n, p, g, h, x;
@@ -54,11 +77,11 @@ int main (int argc, char **argv) {
   
   
   // find the secret key
-  if (x==0 || modExp(g,x,p)!=h) {
+  if (x==0 || modExpDev(g,x,p)!=h) {
     printf("Finding the secret key...\n");
     double startTime = clock();
     for (unsigned int i=0;i<p-1;i++) {
-      if (modExp(g,i+1,p)==h) {
+      if (modExpDev(g,i+1,p)==h) {
         printf("Secret key found! x = %u \n", i+1);
         x=i+1;
       } 
