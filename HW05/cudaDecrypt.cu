@@ -7,26 +7,6 @@
 #include "cuda.h"
 #include "functions.c"
 
-
-int main (int argc, char **argv) {
-/* Part 2. Start this program by first copying the contents of the main function from 
-     your completed decrypt.c main function. */
-
-    __global__ void kernelCudaDecrypt(unsigned int n, unsigned int p, unsigned int g, unsigned int h, unsigned int *x){
-        int threadid = threadIdx.x;
-        int blockid = blockIdx.x;
-        int Nblock = blockDim.x;
-
-        int id = threadid + blockid*Nblock;
-
-        if(id < pow(2,n)){
-             if (modExpDev(g,id,p)==h) {
-                 *x[0] = id;
-             } 
-        }
-    }
-
-  /* Q4 Make the search for the secret key parallel on the GPU using CUDA. */
    __device__ unsigned int modprodDev(unsigned int a, unsigned int b, unsigned int p) {
         unsigned int za = a;
         unsigned int ab = 0;
@@ -50,8 +30,28 @@ int main (int argc, char **argv) {
         }
         return aExpb;
     }
+    __global__ void kernelCudaDecrypt(unsigned int n, unsigned int p, unsigned int g, unsigned int h, unsigned int *x){
+        int threadid = threadIdx.x;
+        int blockid = blockIdx.x;
+        int Nblock = blockDim.x;
 
-  //declare storage for an ElGamal cryptosytem
+        int id = threadid + blockid*Nblock;
+
+        if(id < n){
+             if (modExpDev(g,id,p)==h) {
+                 x[0] = id;
+             } 
+        }
+    }
+
+
+
+int main (int argc, char **argv) {
+/* Part 2. Start this program by first copying the contents of the main function from 
+     your completed decrypt.c main function. */
+
+  /* Q4 Make the search for the secret key parallel on the GPU using CUDA. */
+ //declare storage for an ElGamal cryptosytem
   unsigned int n, p, g, h, x;
   unsigned int Nints;
 
@@ -64,7 +64,7 @@ int main (int argc, char **argv) {
   /* Q3 Complete this function. Read in the public key data from public_key.txt
     and the cyphertexts from messages.txt. */
   FILE* file = fopen("public_key.txt","r");
-  unsigned int *pc = (int *) malloc(4*sizeof(unsigned int));
+  unsigned int *pc = (unsigned int *) malloc(4*sizeof(unsigned int));
 
   for (int m = 0;m<4;m++){
       fscanf(file, "%d", pc+m);
@@ -89,7 +89,7 @@ int main (int argc, char **argv) {
   }
   fclose(file2);
 
-  if (x==0 || modExpDev(g,x,p)!=h) {
+  if (x==0 || modExp(g,x,p)!=h) {
      printf("Finding the secret key...\n");
      unsigned int *hx; //host vector
      unsigned int *dx; //device vector
@@ -98,13 +98,13 @@ int main (int argc, char **argv) {
      hx = (unsigned int *) malloc(1*sizeof(unsigned int));
 
      cudaMalloc(&dx, 1*sizeof(unsigned int));
-  
+     unsigned int new_n = pow(2,n); 
      unsigned int Nthreads = 32;
      unsigned int Nblocks = (pow(2,n)+Nthreads-1)/Nthreads;
 
      double deviceStart = clock();
 
-     kernelCudaDecrypt <<Nblocks, Nthreads >>>(n,p,g,h,dx);
+     kernelCudaDecrypt <<<Nthreads, Nblocks >>>(new_n,p,g,h,dx);
 
      cudaDeviceSynchronize();
 
@@ -120,7 +120,9 @@ int main (int argc, char **argv) {
      double throughput = work/deviceTime;
 
      printf("Searching all keys took %g seconds, throughput was %g values tested per second.\n", deviceTime, throughput);
-  }
+     cudaFree(dx);
+     free(hx);
+ }
 
    
   // find the secret key
@@ -154,7 +156,5 @@ int main (int argc, char **argv) {
   free(Zmessage);
   free(a);
   free(message);
-  cudaFree(dx);
-  free(hx);
-  return 0;
+    return 0;
 }

@@ -1,0 +1,28 @@
+make: `mandelbrot' is up to date.
+libpng warning: Application built with libpng-1.6.20 but running with 1.5.13
+elapsed = 48.4341
+libpng warning: Application built with libpng-1.6.20 but running with 1.5.13
+elapsed = 48.466
+libpng warning: Application built with libpng-1.6.20 but running with 1.5.13
+elapsed = 48.4645
+libpng warning: Application built with libpng-1.6.20 but running with 1.5.13
+elapsed = 48.433
+libpng warning: Application built with libpng-1.6.20 but running with 1.5.13
+elapsed = 48.4713
+libpng warning: Application built with libpng-1.6.20 but running with 1.5.13
+elapsed = 48.4269
+libpng warning: Application built with libpng-1.6.20 but running with 1.5.13
+elapsed = 48.4446
+libpng warning: Application built with libpng-1.6.20 but running with 1.5.13
+elapsed = 48.4278
+libpng warning: Application built with libpng-1.6.20 but running with 1.5.13
+elapsed = 48.4668
+libpng warning: Application built with libpng-1.6.20 but running with 1.5.13
+elapsed = 48.4358
+libpng warning: Application built with libpng-1.6.20 but running with 1.5.13
+elapsed = 48.4388
+libpng warning: Application built with libpng-1.6.20 but running with 1.5.13
+elapsed = 48.4431
+libpng warning: Application built with libpng-1.6.20 but running with 1.5.13
+elapsed = 48.4424
+=>> PBS: job killed: walltime 641 exceeded limit 600
