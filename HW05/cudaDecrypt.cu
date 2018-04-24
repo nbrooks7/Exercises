@@ -12,6 +12,20 @@ int main (int argc, char **argv) {
 /* Part 2. Start this program by first copying the contents of the main function from 
      your completed decrypt.c main function. */
 
+    __global__ void kernelCudaDecrypt(unsigned int n, unsigned int p, unsigned int g, unsigned int h, unsigned int *x){
+        int threadid = threadIdx.x;
+        int blockid = blockIdx.x;
+        int Nblock = blockDim.x;
+
+        int id = threadid + blockid*Nblock;
+
+        if(id < pow(2,n)){
+             if (modExpDev(g,id,p)==h) {
+                 *x[0] = id;
+             } 
+        }
+    }
+
   /* Q4 Make the search for the secret key parallel on the GPU using CUDA. */
    __device__ unsigned int modprodDev(unsigned int a, unsigned int b, unsigned int p) {
         unsigned int za = a;
@@ -74,26 +88,59 @@ int main (int argc, char **argv) {
      fscanf(file2, "%d %d", &Zmessage[n],&a[n] );
   }
   fclose(file2);
-  
-  
-  // find the secret key
+
   if (x==0 || modExpDev(g,x,p)!=h) {
-    printf("Finding the secret key...\n");
-    double startTime = clock();
-    for (unsigned int i=0;i<p-1;i++) {
-      if (modExpDev(g,i+1,p)==h) {
-        printf("Secret key found! x = %u \n", i+1);
-        x=i+1;
-      } 
-    }
-    double endTime = clock();
+     printf("Finding the secret key...\n");
+     unsigned int *hx; //host vector
+     unsigned int *dx; //device vector
 
-    double totalTime = (endTime-startTime)/CLOCKS_PER_SEC;
-    double work = (double) p;
-    double throughput = work/totalTime;
 
-    printf("Searching all keys took %g seconds, throughput was %g values tested per second.\n", totalTime, throughput);
+     hx = (unsigned int *) malloc(1*sizeof(unsigned int));
+
+     cudaMalloc(&dx, 1*sizeof(unsigned int));
+  
+     unsigned int Nthreads = 32;
+     unsigned int Nblocks = (pow(2,n)+Nthreads-1)/Nthreads;
+
+     double deviceStart = clock();
+
+     kernelCudaDecrypt <<Nblocks, Nthreads >>>(n,p,g,h,dx);
+
+     cudaDeviceSynchronize();
+
+     double deviceEnd = clock();
+     double deviceTime = (deviceEnd - deviceStart);
+
+     cudaMemcpy(hx, dx,1*sizeof(unsigned int),cudaMemcpyDeviceToHost); 
+
+     x = hx[0];
+
+     printf("Secret key found! x = %u \n", x);
+     double work = (double) p;
+     double throughput = work/deviceTime;
+
+     printf("Searching all keys took %g seconds, throughput was %g values tested per second.\n", deviceTime, throughput);
   }
+
+   
+  // find the secret key
+  //if (x==0 || modExpDev(g,x,p)!=h) {
+    //printf("Finding the secret key...\n");
+    //double startTime = clock();
+    //for (unsigned int i=0;i<p-1;i++) {
+      //if (modExpDev(g,i+1,p)==h) {
+        //printf("Secret key found! x = %u \n", i+1);
+        //x=i+1;
+      //} 
+    //}
+    //double endTime = clock();
+
+   // double totalTime = (endTime-startTime)/CLOCKS_PER_SEC;
+    //double work = (double) p;
+    //double throughput = work/totalTime;
+
+    //printf("Searching all keys took %g seconds, throughput was %g values tested per second.\n", totalTime, throughput);
+ // }
 
   /* Q3 After finding the secret key, decrypt the message */
   int bufferSize = 1024;
@@ -103,15 +150,11 @@ int main (int argc, char **argv) {
   convertZToString(Zmessage, Nints, message, Nchars);
   printf("Decrypted Message = \"%s\"\n", message);
   
-  //for (int n =0;n<Nints;n++){
-      //printf("message[%d] = %d\n",n,message[n]);
-  //}
-  //for (int m =0;m<Nints;m++){
-      //printf("a[%d] = %d\n",m,a[m]);
-  //}
-
+  
   free(Zmessage);
   free(a);
   free(message);
+  cudaFree(dx);
+  free(hx);
   return 0;
 }
