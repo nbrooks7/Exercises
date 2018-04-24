@@ -115,6 +115,8 @@ int main (int argc, char **argv) {
 
      x = hx[0];
 
+     printf("hx = %u \n", hx[0]);
+
      printf("Secret key found! x = %u \n", x);
      double work = (double) p;
      double throughput = work/deviceTime;
