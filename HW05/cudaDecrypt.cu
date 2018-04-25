@@ -30,14 +30,14 @@
         }
         return aExpb;
     }
-    __global__ void kernelCudaDecrypt(unsigned int n, unsigned int p, unsigned int g, unsigned int h, unsigned int *x){
+    __global__ void kernelCudaDecrypt (unsigned int p, unsigned int g, unsigned int h, unsigned int *x){
         int threadid = threadIdx.x;
         int blockid = blockIdx.x;
         int Nblock = blockDim.x;
 
         int id = threadid + blockid*Nblock;
 
-        if(id < n){
+        if(id < (p-1)){
              if (modExpDev(g,id,p)==h) {
                  x[0] = id;
              } 
@@ -98,13 +98,13 @@ int main (int argc, char **argv) {
      hx = (unsigned int *) malloc(1*sizeof(unsigned int));
 
      cudaMalloc(&dx, 1*sizeof(unsigned int));
-     unsigned int new_n = pow(2,n); 
+     unsigned int N = p-1; 
      unsigned int Nthreads = 32;
-     unsigned int Nblocks = (pow(2,n)+Nthreads-1)/Nthreads;
+     unsigned int Nblocks = (N+Nthreads-1)/Nthreads;
 
      double deviceStart = clock();
 
-     kernelCudaDecrypt <<<Nthreads, Nblocks >>>(new_n,p,g,h,dx);
+     kernelCudaDecrypt <<<Nblocks, Nthreads >>>(p,g,h,dx);
 
      cudaDeviceSynchronize();
 
